@@ -18,7 +18,7 @@ app.use(bodyParser.json());
  * nodemon not in -dev mode
  */
 const mongo_uri=process.env.MONGODB_URI || 'mongodb://localhost/urlShortner';
-mongoose.connect(mongo_uri,{useNewUrlParser:true,useUnifiedTopology:true})
+mongoose.connect(mongo_uri,{useNewUrlParser:true,useUnifiedTopology:true});
 
 const Schema=mongoose.Schema;
 const urlSchema=new Schema({
