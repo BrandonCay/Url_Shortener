@@ -17,7 +17,7 @@ app.use(bodyParser.json());
  * Title is misleading. URLs are not actually shortened but given an index. The user still needs to use the larger url
  * nodemon not in -dev mode
  */
-const mongo_uri=process.env.MONGDB_URI || 'mongodb://localhost/urlShortner';
+const mongo_uri=process.env.MONGODB_URI || 'mongodb://localhost/urlShortner';
 mongoose.connect(mongo_uri,{useNewUrlParser:true,useUnifiedTopology:true})
 
 const Schema=mongoose.Schema;
@@ -110,7 +110,7 @@ if(process.env.NODE_ENV === 'production'){ //for heroku
     })
 }
 
-const PORT=process.env.PORT || 4000;
+const PORT=process.env.PORT || 5000;
 
 
 app.listen(PORT, ()=>{console.log(`port: ${PORT}`)});
