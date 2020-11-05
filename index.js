@@ -104,9 +104,9 @@ app.get('/api/shorturl/new/:newUrl', (req,res)=>{
 })
 
 if(process.env.NODE_ENV === 'production'){ //for heroku
-    app.use(express.static('../client/build'))
+    app.use(express.static('client/build'))
     app.get('*',(req,res)=>{
-        res.sendFile(path.resolve('__dirname','../client','build','index.html'));//possible error here
+        res.sendFile(path.resolve('__dirname','client','build','index.html'));//possible error here
     })
 }
 
@@ -114,3 +114,5 @@ const PORT=process.env.PORT || 4000;
 
 
 app.listen(PORT, ()=>{console.log(`port: ${PORT}`)});
+
+//run again tomorrow 11/3/20
