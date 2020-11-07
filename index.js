@@ -5,8 +5,9 @@ const mongoose=require("mongoose");
 const cors=require("cors");
 const bodyParser=require("body-parser");
 const path=require("path");
+const dotenv=require("dotenv");
 
-
+dotenv.config();
 app.use(cors());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
@@ -17,7 +18,7 @@ app.use(bodyParser.json());
  * Title is misleading. URLs are not actually shortened but given an index. The user still needs to use the larger url
  * nodemon not in -dev mode
  */
-const mongo_uri=process.env.MONGODB_URI || 'mongodb://localhost/urlShortner';
+const mongo_uri=process.env.MONGODB_URI || 'mongodb://localhost/urlShortner'; //note missing e; cant seem to fix on mongodb. May need to reset collection
 mongoose.connect(mongo_uri,{useNewUrlParser:true,useUnifiedTopology:true});
 
 const Schema=mongoose.Schema;
@@ -106,11 +107,11 @@ app.get('/api/shorturl/new/:newUrl', (req,res)=>{
 if(process.env.NODE_ENV === 'production'){ //for heroku
     app.use(express.static('client/build'))
     app.get('*',(req,res)=>{
-        res.sendFile(path.resolve('__dirname','client','build','index.html'));//possible error here
+        res.sendFile(path.resolve('__dirname','client','build','index.html'));//creates absolute directory path
     })
 }
 
-const PORT=process.env.PORT || 5000;
+const PORT=process.env.PORT || 4000;
 
 
 app.listen(PORT, ()=>{console.log(`port: ${PORT}`)});

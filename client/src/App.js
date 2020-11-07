@@ -36,7 +36,7 @@ class App extends React.Component {
   handleSubmit(e){
     this.setState({shortUrl:"Loading..."});
     const oUrl={oUrl:this.state.originalUrl};
-    fetch('http://localhost:4000/api/shortUrl/new',{
+    fetch('http://localhost:4000/api/shortUrl/new',{//localhost should be in variable that updates along with express
       method:'POST',
       headers:{
         'Accept':'application/json',
