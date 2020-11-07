@@ -4,8 +4,9 @@ import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-
 import './App.css';
+
+const PORT= process.env.PORT || 4000;
 
 const textSize="3";
 const barSize="9";
@@ -36,7 +37,7 @@ class App extends React.Component {
   handleSubmit(e){
     this.setState({shortUrl:"Loading..."});
     const oUrl={oUrl:this.state.originalUrl};
-    fetch('http://localhost:4000/api/shortUrl/new',{//localhost should be in variable that updates along with express
+    fetch(`http://localhost:${PORT}/api/shortUrl/new`,{//localhost should be in variable that updates along with express
       method:'POST',
       headers:{
         'Accept':'application/json',
@@ -49,7 +50,7 @@ class App extends React.Component {
         if('error' in data){
           this.setState({shortUrl:`${data.error}`});
         }else{
-          this.setState({shortUrl:`http://localhost:4000/api/shorturl/new/${data.short_url}`});
+          this.setState({shortUrl:`http://localhost:${PORT}/api/shorturl/new/${data.short_url}`});
         }
     }).catch((err)=>{return console.log(err)});
 
@@ -67,7 +68,7 @@ class App extends React.Component {
                   <Form.Row className="justify-content-end align-items-center">
                     <Col md="12" sm="12" xs="12" id="title">
                       <h1>
-                        Url-Shortener
+                        Url-Shortener {PORT}
                       </h1>
                     </Col>
                   </Form.Row>

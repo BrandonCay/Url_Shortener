@@ -7,6 +7,9 @@ const bodyParser=require("body-parser");
 const path=require("path");
 const dotenv=require("dotenv");
 
+const PORT=process.env.PORT || 5000;
+
+
 dotenv.config();
 app.use(cors());
 app.use(bodyParser.urlencoded({extended:true}));
@@ -111,7 +114,6 @@ if(process.env.NODE_ENV === 'production'){ //for heroku
     })
 }
 
-const PORT=4000 || process.env.PORT;
 
 
 app.listen(PORT, ()=>{console.log(`port: ${PORT}`)});
