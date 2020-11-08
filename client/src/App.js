@@ -6,7 +6,6 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import './App.css';
 
-const PORT= process.env.PORT || 4000;
 //http://localhost:${PORT}
 const textSize="3";
 const barSize="9";
@@ -68,7 +67,7 @@ class App extends React.Component {
                   <Form.Row className="justify-content-end align-items-center">
                     <Col md="12" sm="12" xs="12" id="title">
                       <h1>
-                        Url-Shortener {PORT}
+                        Url-Shortener
                       </h1>
                     </Col>
                   </Form.Row>
