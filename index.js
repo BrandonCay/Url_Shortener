@@ -7,7 +7,7 @@ const bodyParser=require("body-parser");
 const path=require("path");
 const dotenv=require("dotenv");
 
-const PORT=process.env.PORT || 5000;
+const PORT=process.env.PORT || 4000;
 
 
 dotenv.config();
@@ -116,6 +116,6 @@ if(process.env.NODE_ENV === 'production'){ //for heroku
 
 
 
-app.listen(PORT, ()=>{console.log(`port: ${PORT}`)});
+app.listen(PORT, ()=>{console.log(`port: ${PORT}`)}); //find the port heroku is using then find a dynamic way to update client
 
 //run again tomorrow 11/3/20

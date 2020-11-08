@@ -7,7 +7,7 @@ import Row from 'react-bootstrap/Row';
 import './App.css';
 
 const PORT= process.env.PORT || 4000;
-
+//http://localhost:${PORT}
 const textSize="3";
 const barSize="9";
 const lgBarSize="10";
@@ -37,7 +37,7 @@ class App extends React.Component {
   handleSubmit(e){
     this.setState({shortUrl:"Loading..."});
     const oUrl={oUrl:this.state.originalUrl};
-    fetch(`http://localhost:${PORT}/api/shortUrl/new`,{//localhost should be in variable that updates along with express
+    fetch(`/api/shortUrl/new`,{//localhost should be in variable that updates along with express
       method:'POST',
       headers:{
         'Accept':'application/json',
@@ -50,7 +50,7 @@ class App extends React.Component {
         if('error' in data){
           this.setState({shortUrl:`${data.error}`});
         }else{
-          this.setState({shortUrl:`http://localhost:${PORT}/api/shorturl/new/${data.short_url}`});
+          this.setState({shortUrl:`/api/shorturl/new/${data.short_url}`});
         }
     }).catch((err)=>{return console.log(err)});
 
