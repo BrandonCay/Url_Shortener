@@ -7,7 +7,7 @@ const bodyParser=require("body-parser");
 const path=require("path");
 const dotenv=require("dotenv");
 
-const PORT=process.env.PORT || 4000;
+const PORT=process.env.PORT || 5000;
 
 
 dotenv.config();
@@ -23,88 +23,77 @@ app.use(bodyParser.json());
  */
 const mongo_uri=process.env.MONGODB_URI || 'mongodb://localhost/urlShortner'; //note missing e; cant seem to fix on mongodb. May need to reset collection
 mongoose.connect(mongo_uri,{useNewUrlParser:true,useUnifiedTopology:true});
+mongoose.set('useFindAndModify',false);
 
 const Schema=mongoose.Schema;
 const urlSchema=new Schema({
     original_url:String,
-    short_url:String
+    short_url:String,
+    date:Date
 })
+
 const Url=mongoose.model('urls',urlSchema);
-app.post('/api/shorturl/new', (req,res)=>{ //oUrl=original url
+
+//Identifies latest addition to replace. Starts at 3 because of existing addition in database
+const maxUrls=5; //limits server memory use
+
+const dnsLookUpProm = async (oUrl) =>{
+    new Promise((res,rej)=>{
+        dns.lookup(oUrl,(err,address,family)=> {
+            if(err)
+                rej(err)
+            else
+                res() 
+        })
+    });
+}
+app.post('/api/shorturl/new', async (req,res)=>{ //oUrl=original url
     console.log("body:",req.body);
-    const {oUrl} = req.body;
-    console.log(oUrl);
-
+    const {oUrl}=req.body;
     if(oUrl===undefined){
-        return res.json({error:"undefined", err});
+        return res.status(404).json({error:"undefined"});
     }else if(oUrl===""){
-        return res.json({error:"No Input"});
+        return res.status(404).json({error:"No Input"});
     }
-    
-    dns.lookup(oUrl,(err, address, family)=>{
-        if(err){
-            console.log(err);
-           return res.json({error:"invalid URL", details:err});
-           
-
+     try{
+        await dnsLookUpProm(oUrl);//check if domain exists. A reject means no
+        let findRes = await Url.findOne({original_url:oUrl}).exec();//check if name is taken
+        if(findRes !== null){
+            console.log('exists');
+            return res.json({ original_url: oUrl, short_url: findRes.short_url });
         }
-        else{
-            Url.findOne({original_url:oUrl},(err,result)=>{//checks if it exists
-                if(err){
-                    console.log('err',err);
-                    return res.json({error:err})
-
-                }else{
-
-                    if(result!==null){//if it does, then return the stored value   
-                        console.log(result);                
-                        res.json({original_url:oUrl, short_url:result.short_url});
-
-                    }else{//if it doesn't, create, save then return value. 
-                        Url.estimatedDocumentCount((err,count)=>{
-                            if(err){
-                                console.log('err',err);
-                                res.json({error:err});
-                                return;
-
-                            }
-                            else{
-                                const urlObject={original_url:oUrl,short_url:count};
-                                const urlDoc=new Url(urlObject);//short url using document count
-                                urlDoc.save((err,data)=>{
-                                    if(err){
-                                        return console.log("error: ",err);
-                                        
-                                    }else{
-                                        return res.json(urlObject);
-                                    }
-                                }) 
-                                
-
-                            }
-                        })
-                    }
-                }
-            })
-                
-
+        const count = await Url.estimatedDocumentCount().exec();
+        if(maxUrls<=count){ //update instead
+            findRes= await Url.find({}).sort('date').exec();//recycle findRes to be array
+            const {_id, short_url}=findRes[0];
+            const newObj = {original_url:oUrl, date:Date()}
+            findRes=await Url.findByIdAndUpdate(_id, newObj).exec();
+            return res.json({short_url:short_url});//send to client to pas
         }
-    })
-    
-})
-
-app.get('/api/shorturl/new/:newUrl', (req,res)=>{
-    const shortUrl=req.params.newUrl;
-    Url.findOne({short_url:shortUrl},(err,result)=>{
-        if(err){
-            res.json({error:err});
-        }else{
-            res.redirect(`http://${result.original_url}`);
-            //changes url
-        }
+        //create new entry
+        findRes = new Url({ original_url: oUrl, short_url: count, date:Date()});//recycle findRes
+        await urlDoc.save().exec(); 
+        console.log('saved');
+        return res.json({ short_url:findRes.short_url});
+     }catch(e){
+         console.log(e);
+        res.status(400).json({error:e , hi:"val"});
+     }
+     
     })
 
-
+app.get('/api/shorturl/:short_url', async (req,res)=>{
+    const {short_url} =req.params;
+    try{
+        const result=await Url.findOne({short_url:short_url});
+        if(result===null){
+            res.status(404).json({newUrl: null}); 
+            return;
+        }
+        res.json({newUrl:`http://${result.original_url}`});
+    }catch(e){
+        res.status(400).json({newUrl:e});
+    }
 })
 
 if(process.env.NODE_ENV === 'production'){ //for heroku
