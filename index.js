@@ -34,7 +34,7 @@ app.use('/api/shorturl',shorturl);
 
   
 if(process.env.NODE_ENV === 'production'){ //for heroku
-  //  app.use(express.static('client/build'))
+  app.use(express.static('client/build'))
 
 app.get("/*", (req, res) => {//need to test //try this alone
     let url = path.join(__dirname, '../client/build', 'index.html');

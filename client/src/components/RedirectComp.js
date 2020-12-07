@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {useParams, Redirect, useHistory} from 'react-router-dom'
+import {useParams, useHistory} from 'react-router-dom'
 
 const RedirectComp =()=>{
     const {short_url} = useParams();
