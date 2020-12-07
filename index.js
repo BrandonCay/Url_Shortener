@@ -42,10 +42,10 @@ app.get("*", (req, res) => {//need to test
       url = url.substring(1);
     res.sendFile(url);
   });
-/*
+
     app.get('*',(req,res)=>{
         res.sendFile(path.resolve('__dirname','client','build','index.html'));//creates absolute directory path
-    })*/
+    })
 }
 
 
