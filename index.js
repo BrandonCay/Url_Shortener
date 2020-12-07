@@ -35,18 +35,18 @@ app.use('/api/shorturl',shorturl);
   
 if(process.env.NODE_ENV === 'production'){ //for heroku
   app.use(express.static('client/build'))
-
+/*
 app.get("/*", (req, res) => {//need to test //try this alone
     let url = path.join(__dirname, '../client/build', 'index.html');
     if (!url.startsWith('/app/')) // since we're on local windows
       url = url.substring(1);
     res.sendFile(url);
   });
-/*
+*/
     app.get('*',(req,res)=>{
-        res.sendFile(path.resolve('__dirname','client','build','index.html'));//creates absolute directory path
+        res.sendFile(path.resolve(__dirname,'client','build','index.html'));//creates absolute directory path
     })
-    */
+    
 }
 
 

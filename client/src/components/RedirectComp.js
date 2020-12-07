@@ -17,7 +17,7 @@ const RedirectComp =()=>{
             global.location.href=`${data.newUrl}`;
         }).catch((e)=>console.log(e));
 
-    },[short_url])
+    })
     return(
       <div>
           Redirecting...
