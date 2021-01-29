@@ -1,2 +1,2 @@
 # Url_Shortener
-https://mernurlshortener2.herokuapp.com/
+deployable: https://mernurlshortener2.herokuapp.com/
