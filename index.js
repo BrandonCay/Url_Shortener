@@ -49,6 +49,16 @@ app.get("/*", (req, res) => {//need to test //try this alone
     
 }
 
+/*
+heroku solution:
+-removed useless favicon files
+-removed unnecessary dependency array
+-change '__dirname' to __dirname (no quotes)
+-rebuilt with the following
+-git add -A
+-NOTE: all was working locally
+*/
+
 
 
 app.listen(PORT, ()=>{console.log(`port: ${PORT}`)}); 
